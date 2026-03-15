@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FRO - Maintenance Reference</title>
+  <meta name="description" content="FRO is a personal, offline-first maintenance reference tool for aircraft mechanics. Log jobs, track tools, search your history.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --fro-blue: #4A7DBD;
+      --fro-blue-dark: #3A6AA8;
+      --fro-orange: #D97B2B;
+      --fro-steel: #6B7B8D;
+      --fro-bg: #0C1117;
+      --fro-surface: #161D27;
+      --fro-surface-2: #1E2733;
+      --fro-text: #E8ECF1;
+      --fro-text-secondary: #8B99AA;
+      --fro-border: #2A3545;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--fro-bg); color: var(--fro-text);
+      line-height: 1.6; -webkit-font-smoothing: antialiased;
+    }
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1rem 2rem;
+      background: rgba(12, 17, 23, 0.85);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--fro-border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .nav-brand { font-weight: 700; font-size: 1.25rem; color: var(--fro-text); text-decoration: none; }
+    .nav-brand span { color: var(--fro-blue); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { color: var(--fro-text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--fro-text); }
+    .hero {
+      padding: 10rem 2rem 6rem; text-align: center;
+      max-width: 800px; margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-block; padding: 0.35rem 1rem;
+      background: var(--fro-surface-2); border: 1px solid var(--fro-border);
+      border-radius: 100px; font-size: 0.8rem; color: var(--fro-orange);
+      font-weight: 600; margin-bottom: 1.5rem;
+      letter-spacing: 0.05em; text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: 3.5rem; font-weight: 700; line-height: 1.1;
+      margin-bottom: 1.5rem; letter-spacing: -0.02em;
+    }
+    .hero h1 em { font-style: normal; color: var(--fro-blue); }
+    .hero p { font-size: 1.25rem; color: var(--fro-text-secondary); max-width: 600px; margin: 0 auto 2.5rem; }
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--fro-blue); color: white; text-decoration: none;
+      padding: 0.85rem 2rem; border-radius: 12px;
+      font-weight: 600; font-size: 1.05rem;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .hero-cta:hover { background: var(--fro-blue-dark); transform: translateY(-1px); }
+    .hero-cta svg { width: 20px; height: 20px; }
+    .hero-price { margin-top: 1rem; font-size: 0.9rem; color: var(--fro-text-secondary); }
+    .hero-price strong { color: var(--fro-text); }
+    .features { padding: 4rem 2rem 6rem; max-width: 1100px; margin: 0 auto; }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    .feature-card {
+      background: var(--fro-surface); border: 1px solid var(--fro-border);
+      border-radius: 16px; padding: 2rem; transition: border-color 0.2s;
+    }
+    .feature-card:hover { border-color: var(--fro-blue); }
+    .feature-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: var(--fro-surface-2); display: flex;
+      align-items: center; justify-content: center;
+      margin-bottom: 1.25rem; font-size: 1.5rem;
+    }
+    .feature-card h3 { font-size: 1.15rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .feature-card p { font-size: 0.95rem; color: var(--fro-text-secondary); line-height: 1.5; }
+    .principles {
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--fro-border);
+      border-bottom: 1px solid var(--fro-border);
+      background: var(--fro-surface);
+    }
+    .principles-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; justify-content: center; gap: 3rem;
+      flex-wrap: wrap; text-align: center;
+    }
+    .principle { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; }
+    .principle strong { font-size: 1rem; font-weight: 600; }
+    .principle span { font-size: 0.85rem; color: var(--fro-text-secondary); }
+    footer { padding: 3rem 2rem; text-align: center; max-width: 800px; margin: 0 auto; }
+    .footer-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .footer-links a { color: var(--fro-text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--fro-text); }
+    .footer-copy { font-size: 0.8rem; color: var(--fro-steel); }
+    @media (max-width: 640px) {
+      .hero { padding: 8rem 1.25rem 4rem; }
+      .hero h1 { font-size: 2.25rem; }
+      .hero p { font-size: 1.05rem; }
+      .features { padding: 3rem 1.25rem 4rem; }
+      .nav-links { gap: 1rem; }
+      .principles-inner { gap: 2rem; }
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="./" class="nav-brand"><span>FRO</span> Maintenance Reference</a>
+  <ul class="nav-links">
+    <li><a href="privacy">Privacy</a></li>
+    <li><a href="support">Support</a></li>
+  </ul>
+</nav>
+<section class="hero">
+  <div class="hero-badge">Built for the Hangar</div>
+  <h1>Your personal <em>maintenance reference</em> library</h1>
+  <p>Log jobs, track tools, search your history. FRO captures the practical knowledge that official manuals don't preserve.</p>
+  <a href="https://apps.apple.com/app/fro-maintenance-reference/id6758827518" class="hero-cta">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+    Download on the App Store
+  </a>
+  <p class="hero-price"><strong>$2.99</strong> &mdash; No subscriptions. No ads. Pay once, use forever.</p>
+</section>
+<section class="features">
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">&#9881;</div>
+      <h3>Job Logging</h3>
+      <p>Record what you did, what you used, and what to remember next time. Tools, consumables, hazmat, parts, and free-form notes for every job.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#128295;</div>
+      <h3>Tool Inventory</h3>
+      <p>Track every tool you own — condition, location, calibration dates. Organize into sets and kits. Know what's borrowed and by whom.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#128269;</div>
+      <h3>Instant Recall</h3>
+      <p>Full-text search across all jobs and tools. Find what you used last time on a similar task in seconds.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#9992;</div>
+      <h3>Fully Offline</h3>
+      <p>No internet required, ever. All data stays on your device. Works in hangars, flight lines, and maintenance bays with zero connectivity.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#128196;</div>
+      <h3>PDF Reports</h3>
+      <p>Generate professional reports for your records. Export individual jobs or batch-export your entire log.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#128257;</div>
+      <h3>Share with Teammates</h3>
+      <p>Export jobs and tools via AirDrop or Files. Import references from colleagues. You control what you share and with whom.</p>
+    </div>
+  </div>
+</section>
+<section class="principles">
+  <div class="principles-inner">
+    <div class="principle"><strong>100% Offline</strong><span>No servers, no cloud</span></div>
+    <div class="principle"><strong>Zero Data Collection</strong><span>Nothing leaves your device</span></div>
+    <div class="principle"><strong>One-Time Purchase</strong><span>No subscriptions, no ads</span></div>
+    <div class="principle"><strong>Built for Mechanics</strong><span>By someone who gets it</span></div>
+  </div>
+</section>
+<footer>
+  <div class="footer-links">
+    <a href="privacy">Privacy Policy</a>
+    <a href="support">Support</a>
+  </div>
+  <p class="footer-copy">&copy; 2026 Mark Enriquez. All rights reserved.</p>
+</footer>
+</body>
+</html>

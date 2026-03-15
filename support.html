@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support - FRO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --fro-blue: #4A7DBD; --fro-blue-dark: #3A6AA8; --fro-orange: #D97B2B;
+      --fro-bg: #0C1117; --fro-surface: #161D27; --fro-surface-2: #1E2733;
+      --fro-text: #E8ECF1; --fro-text-secondary: #8B99AA;
+      --fro-border: #2A3545; --fro-steel: #6B7B8D;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--fro-bg); color: var(--fro-text);
+      line-height: 1.7; -webkit-font-smoothing: antialiased;
+    }
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1rem 2rem;
+      background: rgba(12, 17, 23, 0.85);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--fro-border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .nav-brand { font-weight: 700; font-size: 1.25rem; color: var(--fro-text); text-decoration: none; }
+    .nav-brand span { color: var(--fro-blue); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { color: var(--fro-text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--fro-text); }
+    .content { max-width: 700px; margin: 0 auto; padding: 8rem 2rem 4rem; }
+    .content h1 { font-size: 2.25rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+    .content .subtitle { color: var(--fro-text-secondary); margin-bottom: 3rem; font-size: 0.95rem; }
+    .content h2 { font-size: 1.25rem; font-weight: 600; margin: 2.5rem 0 0.75rem; padding-top: 1.5rem; border-top: 1px solid var(--fro-border); }
+    .content h2:first-of-type { border-top: none; padding-top: 0; }
+    .content p { margin-bottom: 1rem; color: var(--fro-text-secondary); }
+    .support-card {
+      background: var(--fro-surface); border: 1px solid var(--fro-border);
+      border-radius: 16px; padding: 2rem; margin-bottom: 1.25rem;
+      transition: border-color 0.2s;
+    }
+    .support-card:hover { border-color: var(--fro-blue); }
+    .support-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .support-card p { font-size: 0.95rem; color: var(--fro-text-secondary); margin-bottom: 1rem; }
+    .support-card a.btn {
+      display: inline-block; padding: 0.6rem 1.25rem;
+      background: var(--fro-surface-2); border: 1px solid var(--fro-border);
+      border-radius: 8px; color: var(--fro-blue); text-decoration: none;
+      font-weight: 600; font-size: 0.9rem;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .support-card a.btn:hover { background: var(--fro-surface); border-color: var(--fro-blue); }
+    .faq-item { margin-bottom: 2rem; }
+    .faq-item h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--fro-text); }
+    .faq-item p { font-size: 0.95rem; color: var(--fro-text-secondary); }
+    .faq-item code { background: var(--fro-surface); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
+    footer { padding: 3rem 2rem; text-align: center; max-width: 700px; margin: 0 auto; border-top: 1px solid var(--fro-border); }
+    .footer-copy { font-size: 0.8rem; color: var(--fro-steel); }
+    @media (max-width: 640px) { .content { padding: 7rem 1.25rem 3rem; } .content h1 { font-size: 1.75rem; } }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="./" class="nav-brand"><span>FRO</span> Maintenance Reference</a>
+  <ul class="nav-links">
+    <li><a href="./">Home</a></li>
+    <li><a href="privacy">Privacy</a></li>
+  </ul>
+</nav>
+<div class="content">
+  <h1>Support</h1>
+  <p class="subtitle">Need help with FRO? Here's how to get in touch.</p>
+  <div class="support-card">
+    <h3>Report a Bug or Request a Feature</h3>
+    <p>Found something that isn't working right, or have an idea for a feature? Open an issue on GitHub and we'll take a look.</p>
+    <a href="https://github.com/wightout/ForReferenceOnly_v0/issues" class="btn">Open an Issue on GitHub</a>
+  </div>
+  <div class="support-card">
+    <h3>Contact the Developer</h3>
+    <p>For anything else &mdash; questions, feedback, or just to say hey.</p>
+    <a href="https://github.com/wightout" class="btn">GitHub: @wightout</a>
+  </div>
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-item">
+    <h3>Where is my data stored?</h3>
+    <p>All data is stored locally on your device using Apple's SwiftData framework. Nothing is sent to any server. Your data lives entirely in the app's container on your iPhone.</p>
+  </div>
+  <div class="faq-item">
+    <h3>How do I back up my data?</h3>
+    <p>FRO data is included in your standard iCloud or iTunes/Finder device backups. You can also export individual jobs or tools as <code>.frojob</code> / <code>.frotool</code> files to share or archive.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Can I transfer data to a new phone?</h3>
+    <p>Yes. If you restore from a device backup (iCloud or Finder), your FRO data transfers automatically. You can also export and reimport using the app's built-in export feature.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Does FRO require an internet connection?</h3>
+    <p>No. FRO works entirely offline. There are no network requests, no accounts, and no cloud sync. It works in hangars with zero connectivity.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Is FRO an official maintenance tracking system?</h3>
+    <p>No. FRO is a personal reference tool. It captures your practical knowledge and experience but is not a substitute for official Technical Manuals, Work Cards, or approved maintenance procedures.</p>
+  </div>
+  <div class="faq-item">
+    <h3>What iOS version does FRO require?</h3>
+    <p>FRO requires iOS 17.0 or later.</p>
+  </div>
+</div>
+<footer><p class="footer-copy">&copy; 2026 Mark Enriquez. All rights reserved.</p></footer>
+</body>
+</html>
