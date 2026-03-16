@@ -6,55 +6,146 @@
   <title>Privacy Policy - FRO</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --fro-blue: #4A7DBD; --fro-bg: #0C1117; --fro-surface: #161D27;
-      --fro-text: #E8ECF1; --fro-text-secondary: #8B99AA;
-      --fro-border: #2A3545; --fro-steel: #6B7B8D;
+      --fro-green: #1E9B1E;
+      --fro-green-soft: rgba(30, 155, 30, 0.08);
+      --fro-green-medium: rgba(30, 155, 30, 0.15);
+      --fro-bg: #F0F4F8;
+      --fro-grid: rgba(30, 80, 140, 0.06);
+      --fro-grid-major: rgba(30, 80, 140, 0.10);
+      --fro-surface: #FFFFFF;
+      --fro-ink: #1B2A3D;
+      --fro-ink-mid: #3D5068;
+      --fro-ink-light: #7389A0;
+      --fro-border: rgba(30, 80, 140, 0.12);
+      --fro-dim: #A0B0C0;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--fro-bg); color: var(--fro-text);
-      line-height: 1.7; -webkit-font-smoothing: antialiased;
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--fro-bg);
+      color: var(--fro-ink);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      background-image:
+        linear-gradient(var(--fro-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--fro-grid) 1px, transparent 1px),
+        linear-gradient(var(--fro-grid-major) 1px, transparent 1px),
+        linear-gradient(90deg, var(--fro-grid-major) 1px, transparent 1px);
+      background-size: 20px 20px, 20px 20px, 100px 100px, 100px 100px;
     }
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      padding: 1rem 2rem;
-      background: rgba(12, 17, 23, 0.85);
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      padding: 0.85rem 2rem;
+      background: rgba(240, 244, 248, 0.88);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--fro-border);
       display: flex; justify-content: space-between; align-items: center;
     }
-    .nav-brand { font-weight: 700; font-size: 1.25rem; color: var(--fro-text); text-decoration: none; }
-    .nav-brand span { color: var(--fro-blue); }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a { color: var(--fro-text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
-    .nav-links a:hover { color: var(--fro-text); }
-    .content { max-width: 700px; margin: 0 auto; padding: 8rem 2rem 4rem; }
-    .content h1 { font-size: 2.25rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
-    .content .subtitle { color: var(--fro-text-secondary); margin-bottom: 3rem; font-size: 0.95rem; }
-    .content h2 { font-size: 1.25rem; font-weight: 600; margin: 2.5rem 0 0.75rem; padding-top: 1.5rem; border-top: 1px solid var(--fro-border); }
-    .content h2:first-of-type { border-top: none; padding-top: 0; }
-    .content p { margin-bottom: 1rem; color: var(--fro-text-secondary); }
-    .content strong { color: var(--fro-text); }
-    .content ul { margin: 0.5rem 0 1rem 1.5rem; color: var(--fro-text-secondary); }
-    .content li { margin-bottom: 0.4rem; }
-    .content code { background: var(--fro-surface); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
-    .summary-box {
-      background: var(--fro-surface); border: 1px solid var(--fro-border);
-      border-radius: 12px; padding: 1.5rem; margin-bottom: 2.5rem;
-      font-size: 1.1rem; color: var(--fro-text); text-align: center;
+    .nav-brand {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 700; font-size: 1.05rem;
+      color: var(--fro-ink); text-decoration: none;
+      letter-spacing: 0.03em;
     }
-    footer { padding: 3rem 2rem; text-align: center; max-width: 700px; margin: 0 auto; border-top: 1px solid var(--fro-border); }
-    .footer-copy { font-size: 0.8rem; color: var(--fro-steel); }
-    @media (max-width: 640px) { .content { padding: 7rem 1.25rem 3rem; } .content h1 { font-size: 1.75rem; } }
+    .nav-brand span { color: var(--fro-green); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--fro-ink-light); text-decoration: none;
+      font-size: 0.8rem; font-weight: 500;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--fro-green); }
+
+    .content {
+      max-width: 720px; margin: 0 auto;
+      padding: 8rem 2rem 4rem;
+    }
+    .content h1 {
+      font-size: 2rem; font-weight: 700;
+      margin-bottom: 0.4rem; letter-spacing: -0.02em;
+    }
+    .content .subtitle {
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--fro-ink-light);
+      margin-bottom: 2.5rem;
+      font-size: 0.82rem;
+      letter-spacing: 0.02em;
+    }
+    .summary-box {
+      background: var(--fro-green-soft);
+      border: 1px solid var(--fro-green-medium);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2.5rem;
+      font-size: 1.05rem;
+      color: var(--fro-ink);
+      text-align: center;
+      line-height: 1.6;
+    }
+    .content h2 {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 1rem; font-weight: 600;
+      margin: 2.5rem 0 0.75rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--fro-border);
+      letter-spacing: 0.02em;
+      color: var(--fro-ink);
+    }
+    .content h2:first-of-type { border-top: none; padding-top: 0; }
+    .content p {
+      margin-bottom: 1rem;
+      color: var(--fro-ink-mid);
+      font-size: 0.95rem;
+    }
+    .content strong { color: var(--fro-ink); }
+    .content ul {
+      margin: 0.5rem 0 1rem 1.5rem;
+      color: var(--fro-ink-mid);
+    }
+    .content li {
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+    .content code {
+      font-family: 'IBM Plex Mono', monospace;
+      background: var(--fro-surface);
+      border: 1px solid var(--fro-border);
+      padding: 0.12rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.85em;
+    }
+    .content a {
+      color: var(--fro-green);
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .content a:hover { opacity: 0.8; }
+
+    footer {
+      padding: 3rem 2rem;
+      max-width: 720px; margin: 0 auto;
+      border-top: 1px solid var(--fro-border);
+      text-align: center;
+    }
+    .footer-copy {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem; color: var(--fro-dim);
+    }
+
+    @media (max-width: 640px) {
+      .content { padding: 7rem 1.25rem 3rem; }
+      .content h1 { font-size: 1.65rem; }
+    }
   </style>
 </head>
 <body>
 <nav>
-  <a href="./" class="nav-brand"><span>FRO</span> Maintenance Reference</a>
+  <a href="./" class="nav-brand"><span>FRO</span> // MAINTENANCE REF</a>
   <ul class="nav-links">
     <li><a href="./">Home</a></li>
     <li><a href="support">Support</a></li>
@@ -62,7 +153,7 @@
 </nav>
 <div class="content">
   <h1>Privacy Policy</h1>
-  <p class="subtitle">Effective March 14, 2026 &middot; Last updated March 14, 2026</p>
+  <p class="subtitle">Effective March 14, 2026 &middot; Last updated March 16, 2026</p>
   <div class="summary-box">
     FRO does not collect, store, or transmit any personal data.<br>
     Everything stays on your device.
@@ -81,7 +172,7 @@
   <h2>Camera Usage</h2>
   <p>FRO requests camera access solely to let you photograph tools and job references. Photos are stored locally on your device within the app's data container. They are never transmitted anywhere.</p>
   <h2>Microphone &amp; Speech Recognition (Beta)</h2>
-  <p>FRO includes an optional voice capture feature (off by default) that uses Apple's Speech framework to transcribe voice memos into job notes. When enabled by the user, speech recognition is performed using Apple's on-device processing. However, <strong>Apple's SFSpeechRecognizer may transmit audio data to Apple's servers</strong> depending on the device model, iOS version, and system settings. FRO does not control this behavior — it is determined by Apple's Speech framework. No audio or transcription data is sent to the FRO developer or any third party other than Apple.</p>
+  <p>FRO includes an optional voice capture feature (off by default) that uses Apple's Speech framework to transcribe voice memos into job notes. When enabled by the user, speech recognition is performed using Apple's on-device processing. However, <strong>Apple's SFSpeechRecognizer may transmit audio data to Apple's servers</strong> depending on the device model, iOS version, and system settings. FRO does not control this behavior &mdash; it is determined by Apple's Speech framework. No audio or transcription data is sent to the FRO developer or any third party other than Apple.</p>
   <p>You can enable or disable voice capture at any time in Settings. A warning is displayed when first enabling the feature.</p>
   <h2>Data Sharing</h2>
   <p>FRO shares data <strong>only when you explicitly choose to export it.</strong> Export features include:</p>
@@ -100,7 +191,7 @@
   <h2>Contact</h2>
   <p>If you have questions about this privacy policy, contact:</p>
   <p><strong>Mark Enriquez</strong><br>
-  GitHub: <a href="https://github.com/wightout" style="color: var(--fro-blue);">github.com/wightout</a></p>
+  GitHub: <a href="https://github.com/wightout">github.com/wightout</a></p>
 </div>
 <footer><p class="footer-copy">&copy; 2026 Mark Enriquez. All rights reserved.</p></footer>
 </body>
