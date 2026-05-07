@@ -1,382 +1,1172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FRO - Maintenance Reference</title>
-  <meta name="description" content="FRO is a personal, offline-first maintenance reference tool for aircraft mechanics. Log jobs, track tools, search your history.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --fro-green: #1E9B1E;
-      --fro-green-soft: rgba(30, 155, 30, 0.08);
-      --fro-green-medium: rgba(30, 155, 30, 0.15);
-      --fro-orange: #D97B2B;
-      --fro-bg: #F0F4F8;
-      --fro-grid: rgba(30, 80, 140, 0.06);
-      --fro-grid-major: rgba(30, 80, 140, 0.10);
-      --fro-surface: #FFFFFF;
-      --fro-ink: #1B2A3D;
-      --fro-ink-mid: #3D5068;
-      --fro-ink-light: #7389A0;
-      --fro-border: rgba(30, 80, 140, 0.12);
-      --fro-dim: #A0B0C0;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', -apple-system, sans-serif;
-      background: var(--fro-bg);
-      color: var(--fro-ink);
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      /* Light blueprint grid */
-      background-image:
-        linear-gradient(var(--fro-grid) 1px, transparent 1px),
-        linear-gradient(90deg, var(--fro-grid) 1px, transparent 1px),
-        linear-gradient(var(--fro-grid-major) 1px, transparent 1px),
-        linear-gradient(90deg, var(--fro-grid-major) 1px, transparent 1px);
-      background-size:
-        20px 20px,
-        20px 20px,
-        100px 100px,
-        100px 100px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FRO — Your personal mechanic's logbook</title>
+<meta name="description" content="A personal maintenance reference for aircraft mechanics. Pilots have logbooks. Aircraft have logbooks. Now you have one too. Subordinate to your TMs and Work Cards.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* Two-ink doc palette — copper (warm signal) + cyanotype blue (cool, structural) */
+    --paper:#EDEEEA;          /* drafting linen */
+    --paper-2:#E2E4DE;        /* tone band */
+    --paper-3:#D4D7CF;        /* heavy tone */
+    --ink:#0E1620;            /* near-black, AAA on paper */
+    --ink-mid:#2C3540;        /* darker graphite for body — was 475262 */
+    --ink-light:#6B7380;      /* labels only */
+    --rule:#BBBFB6;
+    --rule-strong:#9DA298;
+    --accent:#7A4A28;         /* oxidized copper — warm signal (corrections, FRO) */
+    --accent-deep:#5A3518;
+    --accent-tint:rgba(122,74,40,.10);
+    --blueprint:#1E3A5F;      /* cyanotype navy — cool signal (TM, structure) */
+    --blueprint-deep:#0F2440;
+    --blueprint-tint:rgba(30,58,95,.10);
+    --ink-night:#A8AEA2;      /* soft warm-grey band — tonal shift, in-family with the paper */
+    --paper-night:#1A2230;    /* dark text on the soft band */
+    --grid-tint:rgba(26,34,48,.10);
+    --pen:#0E1620;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',-apple-system,sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    /* subtle drafting-grid texture, very faint */
+    background-image: radial-gradient(var(--grid-tint) 1px, transparent 1.2px);
+    background-size: 16px 16px;
+    background-position:-1px -1px;
+  }
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline;text-underline-offset:2px}
+  img{display:block;max-width:100%}
 
-    /* ─── NAV ─── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      padding: 0.85rem 2rem;
-      background: rgba(240, 244, 248, 0.88);
-      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--fro-border);
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .nav-brand {
-      font-family: 'IBM Plex Mono', monospace;
-      font-weight: 700; font-size: 1.05rem;
-      color: var(--fro-ink); text-decoration: none;
-      letter-spacing: 0.03em;
-    }
-    .nav-brand span { color: var(--fro-green); }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a {
-      font-family: 'IBM Plex Mono', monospace;
-      color: var(--fro-ink-light); text-decoration: none;
-      font-size: 0.8rem; font-weight: 500;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: var(--fro-green); }
+  .wrap{max-width:1100px;margin:0 auto;padding:0 2rem;position:relative}
 
-    /* ─── HERO ─── */
-    .hero {
-      padding: 10rem 2rem 5rem;
-      text-align: center;
-      max-width: 850px; margin: 0 auto;
-      position: relative;
-    }
-    .hero-label {
-      display: inline-block;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.72rem; font-weight: 600;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--fro-green);
-      background: var(--fro-green-soft);
-      border: 1px solid var(--fro-green-medium);
-      padding: 0.35rem 1.1rem;
-      border-radius: 4px;
-      margin-bottom: 1.5rem;
-    }
-    .hero h1 {
-      font-size: 3.2rem; font-weight: 700; line-height: 1.12;
-      margin-bottom: 1.25rem;
-      letter-spacing: -0.025em;
-      color: var(--fro-ink);
-    }
-    .hero h1 em {
-      font-style: normal;
-      color: var(--fro-green);
-    }
-    .hero-sub {
-      font-size: 1.15rem; color: var(--fro-ink-mid);
-      max-width: 560px; margin: 0 auto 2.5rem;
-      line-height: 1.65;
-    }
-    .cta-group {
-      display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
-    }
-    .hero-cta {
-      display: inline-flex; align-items: center;
-      text-decoration: none;
-      transition: transform 0.15s;
-    }
-    .hero-cta:hover { transform: scale(1.03); }
-    .hero-cta img { height: 48px; }
-    .hero-price {
-      font-size: 0.95rem; color: var(--fro-ink-light);
-    }
-    .hero-price strong { color: var(--fro-ink); font-weight: 600; }
+  /* NAV */
+  nav{
+    position:sticky;top:0;z-index:100;
+    background:rgba(237,238,234,.94);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--rule);
+  }
+  .nav-inner{
+    max-width:1100px;margin:0 auto;padding:.85rem 2rem;
+    display:flex;justify-content:space-between;align-items:center;gap:1rem;
+  }
+  .brand{
+    display:inline-flex;align-items:center;gap:.6rem;
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:700;font-size:.92rem;
+    letter-spacing:.04em;color:var(--ink);
+  }
+  .brand .icon{
+    width:28px;height:28px;border-radius:6px;
+    background:#3F6E4A;
+    display:inline-flex;align-items:center;justify-content:center;
+    box-shadow:0 1px 0 rgba(0,0,0,.15), inset 0 1px 0 rgba(255,255,255,.12);
+    flex-shrink:0;
+  }
+  .brand .icon span{
+    font-family:'IBM Plex Sans','Helvetica Neue',sans-serif;
+    font-size:.62rem;font-weight:800;letter-spacing:.04em;
+    color:#F2EFE6;
+  }
+  .brand b{color:var(--blueprint)}
+  .nav-links{display:flex;gap:1.5rem;list-style:none;flex-wrap:wrap}
+  .nav-links a{
+    font-family:'IBM Plex Mono',monospace;
+    color:var(--ink-mid);font-size:.74rem;
+    letter-spacing:.08em;text-transform:uppercase;
+  }
+  .nav-links a:hover{color:var(--accent);text-decoration:none}
 
-    /* ─── VALUE STRIP ─── */
-    .value-strip {
-      padding: 1.5rem 2rem;
-      max-width: 820px;
-      margin: 0 auto 2rem;
-      display: flex; justify-content: center; gap: 2.5rem; flex-wrap: wrap;
-    }
-    .value-chip {
-      display: flex; align-items: center; gap: 0.5rem;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.78rem; font-weight: 500;
-      color: var(--fro-ink-mid);
-      letter-spacing: 0.02em;
-    }
-    .value-chip .dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--fro-green);
-    }
+  /* DOCSTRIP */
+  .docstrip{
+    background:var(--paper-2);
+    border-bottom:1px solid var(--rule-strong);
+    padding:.6rem 2rem;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.72rem;color:var(--ink-mid);
+    text-align:center;letter-spacing:.04em;
+  }
+  .docstrip b{color:var(--ink)}
+  .docstrip .pip{
+    display:inline-block;width:6px;height:6px;border-radius:50%;
+    background:var(--accent);vertical-align:1px;margin-right:.4rem;
+  }
 
-    /* ─── SECTION LABELS ─── */
-    .section-divider {
-      max-width: 1060px; margin: 0 auto;
-      padding: 0 2rem;
-      display: flex; align-items: center; gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    .section-divider span {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.68rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--fro-dim);
-      white-space: nowrap;
-    }
-    .section-divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--fro-border);
-    }
+  /* HERO */
+  .hero{padding:5rem 0 3.5rem;border-bottom:1px solid var(--rule);position:relative}
+  .hero .meta{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.7rem;color:var(--ink-light);
+    letter-spacing:.18em;text-transform:uppercase;
+    margin-bottom:1.5rem;
+    display:flex;gap:1.5rem;flex-wrap:wrap;
+  }
+  .hero .meta span:first-child{color:var(--blueprint)}
+  .hero h1{
+    font-family:'Source Serif 4',Georgia,serif;
+    font-size:clamp(2.1rem,5vw,3.4rem);
+    font-weight:600;
+    line-height:1.08;letter-spacing:-.02em;
+    margin-bottom:1.4rem;
+    max-width:24ch;
+    position:relative;
+  }
+  .hero h1 em{
+    font-style:italic;color:var(--blueprint);position:relative;
+    font-size:1.05em;
+    display:inline-block;
+    padding-bottom:.05em;
+  }
+  .hero h1 em::after{
+    content:'';
+    position:absolute;
+    left:-.05em;right:-.05em;bottom:-.04em;
+    height:.28em;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'><path d='M2 7 C 30 2, 60 11, 90 6 S 150 2, 198 8' fill='none' stroke='%231E3A5F' stroke-width='2.4' stroke-linecap='round'/></svg>");
+    background-repeat:no-repeat;
+    background-size:100% 100%;
+    opacity:.9;
+    pointer-events:none;
+  }
+  .hero h1 em .annot{
+    position:absolute;
+    left:100%; top:.4em;
+    margin-left:.6rem;
+    font-family:'Caveat',cursive;
+    font-size:.42em;color:var(--accent);
+    font-style:normal;
+    line-height:1.1;
+    transform:rotate(-3deg);
+    pointer-events:none;
+    white-space:nowrap;
+  }
+  .hero h1 em .annot::before{
+    content:'↙';
+    display:inline-block;
+    transform:translateY(-.2em) rotate(20deg);
+    margin-right:.15em;
+    font-family:'Caveat',cursive;
+  }
+  @media(max-width:720px){.hero h1 em .annot{display:none}}
+  .hero .sub{
+    font-size:1.1rem;color:var(--ink-mid);
+    line-height:1.7;max-width:68ch;
+  }
+  .hero .sub b{color:var(--ink);font-weight:600}
+  .cta{
+    display:flex;align-items:center;gap:1.5rem;
+    margin-top:2.5rem;flex-wrap:wrap;
+  }
+  .cta-badge{display:inline-block;transition:transform .15s}
+  .cta-badge:hover{transform:translateY(-1px)}
+  .cta-badge img{height:48px}
+  .cta .price{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.86rem;color:var(--ink-mid);
+  }
+  .cta .price b{color:var(--ink)}
 
-    /* ─── FEATURES ─── */
-    .features {
-      padding: 3rem 2rem 4rem;
-      max-width: 1060px; margin: 0 auto;
-    }
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.25rem;
-    }
-    .feature-card {
-      background: var(--fro-surface);
-      border: 1px solid var(--fro-border);
-      border-radius: 8px;
-      padding: 1.75rem;
-      position: relative;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .feature-card:hover {
-      border-color: var(--fro-green);
-      box-shadow: 0 4px 20px rgba(30, 155, 30, 0.07);
-    }
-    /* Schematic ref number */
-    .feature-ref {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.6rem;
-      color: var(--fro-dim);
-      position: absolute;
-      top: 0.65rem; right: 0.75rem;
-      letter-spacing: 0.05em;
-    }
-    .feature-icon {
-      width: 40px; height: 40px;
-      border-radius: 8px;
-      background: var(--fro-green-soft);
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 1rem;
-      font-size: 1.2rem;
-    }
-    .feature-card h3 {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.95rem; font-weight: 600;
-      margin-bottom: 0.4rem;
-      color: var(--fro-ink);
-    }
-    .feature-card p {
-      font-size: 0.88rem;
-      color: var(--fro-ink-light);
-      line-height: 1.55;
-    }
+  /* AUDIENCE */
+  .audience{
+    padding:1.75rem 0;
+    background:var(--ink-night);
+    border-top:1px solid #8E948A;border-bottom:1px solid #8E948A;
+    background-image: radial-gradient(rgba(26,34,48,.10) 1px, transparent 1.2px);
+    background-size:18px 18px;
+  }
+  .audience .ax-label{color:rgba(26,34,48,.7)}
+  .audience .ax{
+    border-color:rgba(26,34,48,.4);
+    color:var(--paper-night);
+    background:rgba(242,239,230,.18);
+  }
+  .audience .audience-line{color:rgba(26,34,48,.78)}
+  .audience .row{
+    display:flex;gap:.5rem .55rem;flex-wrap:wrap;align-items:center;
+    margin-bottom:1rem;
+  }
+  .ax-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.68rem;color:var(--ink-light);
+    letter-spacing:.18em;text-transform:uppercase;
+    margin-right:.5rem;
+  }
+  .ax{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.72rem;letter-spacing:.04em;
+    color:var(--ink);
+    border:1px solid var(--rule-strong);
+    background:transparent;
+    padding:.32rem .7rem;border-radius:2px;
+    white-space:nowrap;
+    line-height:1.2;
+  }
+  .audience-line{
+    font-family:'Source Serif 4',Georgia,serif;
+    font-size:1.05rem;color:var(--ink-mid);
+    font-style:italic;line-height:1.5;
+    max-width:none;
+  }
 
-    /* ─── PRINCIPLES ─── */
-    .principles {
-      padding: 3rem 2rem;
-      max-width: 1060px; margin: 0 auto;
-    }
-    .principles-card {
-      background: var(--fro-green);
-      border-radius: 12px;
-      padding: 2.5rem;
-      display: flex; justify-content: center; gap: 3.5rem;
-      flex-wrap: wrap;
-    }
-    .principle {
-      display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
-      text-align: center;
-    }
-    .principle strong {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.88rem; font-weight: 700;
-      color: #FFFFFF;
-      letter-spacing: 0.02em;
-    }
-    .principle span {
-      font-size: 0.78rem;
-      color: rgba(255, 255, 255, 0.72);
-    }
+  /* SECTIONS */
+  .section{padding:5rem 0 4rem;background:var(--ink-night);border-top:1px solid #8E948A;border-bottom:1px solid #8E948A;background-image:radial-gradient(rgba(26,34,48,.10) 1px,transparent 1.2px);background-size:18px 18px}
+  .section .section-head{border-bottom-color:rgba(26,34,48,.25)}
+  .section .section-head .num{color:var(--blueprint)}
+  .section .section-head .right{color:rgba(26,34,48,.55)}
+  .section-head{
+    display:flex;align-items:baseline;gap:1rem;
+    margin-bottom:2rem;
+    border-bottom:1px solid var(--rule);
+    padding-bottom:.75rem;
+  }
+  .section-head .num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.74rem;color:var(--blueprint);
+    letter-spacing:.12em;font-weight:700;
+  }
+  .section-head h2{
+    font-family:'Source Serif 4',Georgia,serif;
+    font-size:1.7rem;font-weight:600;
+    letter-spacing:-.01em;
+  }
+  .section-head .right{
+    margin-left:auto;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.68rem;color:var(--ink-light);
+    letter-spacing:.12em;text-transform:uppercase;
+  }
 
-    /* ─── FOOTER — Title Block style ─── */
-    footer {
-      padding: 3rem 2rem;
-      max-width: 1060px; margin: 0 auto;
-      border-top: 1px solid var(--fro-border);
-      display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 1rem;
-    }
-    .footer-links {
-      display: flex; gap: 1.5rem; flex-wrap: wrap;
-    }
-    .footer-links a {
-      font-family: 'IBM Plex Mono', monospace;
-      color: var(--fro-ink-light); text-decoration: none;
-      font-size: 0.8rem; letter-spacing: 0.02em;
-      transition: color 0.2s;
-    }
-    .footer-links a:hover { color: var(--fro-green); }
-    .footer-copy {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.72rem; color: var(--fro-dim);
-    }
+  /* LOGBOOK PREMISE — what it becomes */
+  .logbook{padding:5rem 0 1rem}
+  .logbook-grid{
+    display:grid;grid-template-columns:.9fr 1.1fr;
+    gap:3rem;align-items:start;
+  }
+  @media(max-width:880px){.logbook-grid{grid-template-columns:1fr;gap:2.5rem}}
+  .logbook-copy p{
+    font-family:'Source Serif 4',Georgia,serif;
+    font-size:1.15rem;color:var(--ink-mid);
+    line-height:1.7;margin-bottom:1.1rem;
+  }
+  .logbook-copy p.lede{
+    font-size:1.35rem;color:var(--ink);
+    line-height:1.45;font-weight:500;
+    margin-bottom:1.4rem;
+    max-width:30ch;
+  }
+  .logbook-copy p.lede em{font-style:italic;color:var(--accent)}
+  .logbook-copy ul{
+    list-style:none;margin-top:1.25rem;
+    border-top:1px solid var(--rule);
+    padding-top:1rem;
+  }
+  .logbook-copy ul li{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.78rem;color:var(--ink-mid);
+    padding:.45rem 0;
+    border-bottom:1px dashed var(--rule);
+    display:flex;align-items:baseline;gap:1rem;
+    white-space:nowrap;
+  }
+  .logbook-copy ul li b:first-child{flex:0 0 auto}
+  .logbook-copy ul li .qty{margin-left:auto;text-align:right}
+  .logbook-copy ul li:last-child{border-bottom:none}
+  .logbook-copy ul li b{color:var(--ink);font-weight:600}
+  .logbook-copy .qty{color:var(--blueprint);font-weight:600}
+  .logbook-copy ul li b:first-child{color:var(--ink);font-weight:600;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
 
-    /* ─── RESPONSIVE ─── */
-    @media (max-width: 768px) {
-      .hero { padding: 8rem 1.25rem 3rem; }
-      .hero h1 { font-size: 2.2rem; }
-      .hero-sub { font-size: 1.05rem; }
-      .features { padding: 2rem 1.25rem 3rem; }
-      .features-grid { grid-template-columns: 1fr; }
-      .value-strip { gap: 1rem; }
-      .principles-card { padding: 2rem 1.5rem; gap: 2rem; }
-      footer { flex-direction: column; text-align: center; }
-      .section-divider { padding: 0 1.25rem; }
-    }
-    @media (min-width: 769px) and (max-width: 1024px) {
-      .features-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-  </style>
+  .stack-wrap{display:flex;justify-content:flex-end;align-items:flex-start;padding-top:1rem}
+  .stack{width:100%;max-width:520px;height:auto}
+  .nbpage-wrap{display:flex;justify-content:flex-end;align-items:flex-start;padding-top:.5rem}
+  .nbpage{width:100%;max-width:540px;height:auto;filter:drop-shadow(0 12px 24px rgba(20,18,12,.18)) drop-shadow(0 2px 4px rgba(20,18,12,.12))}
+  .counters{
+    margin-top:2rem;padding-top:1rem;
+    border-top:1px solid var(--rule);
+    display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.7rem;color:var(--ink-light);
+    letter-spacing:.06em;
+  }
+  .counters b{color:var(--blueprint);font-weight:700;letter-spacing:.04em}
+
+  /* TWO-COL DOES/DOESN'T */
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem}
+  @media(max-width:720px){.twocol{grid-template-columns:1fr;gap:2rem}}
+  .col h3{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink);margin-bottom:1rem;
+    padding-bottom:.5rem;
+    border-bottom:1px solid var(--rule);
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .col h3 .tag{font-size:.62rem;color:var(--ink-light);letter-spacing:.1em}
+  .col ul{list-style:none}
+  .col li{
+    padding:.7rem 0;
+    border-bottom:1px dashed var(--rule);
+    font-size:.95rem;line-height:1.55;
+    display:flex;gap:.8rem;
+  }
+  .col li:last-child{border-bottom:none}
+  .col li::before{
+    content:'·';
+    font-family:'IBM Plex Mono',monospace;
+    color:var(--blueprint);font-weight:700;flex-shrink:0;
+    min-width:.6rem;
+  }
+  .col.doesnt li{color:var(--ink-mid)}
+  .col.doesnt li::before{content:'×';color:var(--ink-light)}
+
+  /* NOTEBOOK NARRATIVE — dark inversion band */
+  .notebook{
+    padding:5rem 0 4rem;margin-top:0;
+    background:transparent;color:var(--ink);
+    border-top:1px solid var(--rule);
+    background-size:18px 18px;
+  }
+  .notebook .section-head{border-bottom-color:rgba(26,34,48,.25)}
+  .notebook .section-head h2{color:var(--paper-night)}
+  .notebook .section-head .num{color:var(--blueprint)}
+  .notebook .section-head .right{color:rgba(26,34,48,.55)}
+  .notebook .body{position:relative;display:grid;grid-template-columns:minmax(0,64ch) minmax(220px,1fr);gap:3rem;align-items:start}
+  .notebook .body > .lede,
+  .notebook .body > p:not(.close){grid-column:1}
+  .notebook .body > .diptych,
+  .notebook .body > p.close,
+  .notebook .body > .signoff{grid-column:1 / -1}
+  .notebook .body > .margins{grid-column:2;grid-row:1 / span 6;align-self:start}
+  @media(max-width:980px){
+    .notebook .body{grid-template-columns:1fr;gap:2rem}
+    .notebook .body > .margins{grid-column:1;grid-row:auto}
+  }
+  .notebook p{
+    font-family:'Source Serif 4',Georgia,serif;
+    font-size:1.15rem;color:rgba(26,34,48,.78);
+    line-height:1.7;margin-bottom:1.1rem;
+  }
+  .notebook p.lede{
+    font-size:1.35rem;color:var(--paper-night);
+    line-height:1.5;font-weight:500;
+    margin-bottom:1.6rem;
+  }
+  .notebook p.close{
+    font-size:1.15rem;color:var(--paper-night);font-weight:500;
+  }
+  .notebook p.close strong{color:var(--accent-deep);font-weight:600}
+
+  /* ONE handwritten signoff */
+  .signoff{
+    margin-top:2rem;
+    font-family:'Caveat',cursive;
+    font-size:1.45rem;color:var(--accent-deep);
+    transform:rotate(-1deg);
+    display:inline-block;
+    padding-left:1rem;
+    border-left:2px solid var(--accent);
+  }
+  .signoff small{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.62rem;color:rgba(26,34,48,.5);
+    letter-spacing:.12em;text-transform:uppercase;
+    margin-top:.3rem;transform:rotate(1deg);
+  }
+
+  /* MARGIN-NOTES — sticky-note "before" / structured "after" */
+  .translate{
+    margin-top:2.5rem;
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    padding:2.25rem 0;
+    display:grid;grid-template-columns:1fr auto 1fr;gap:2rem;align-items:start;
+  }
+  @media(max-width:880px){.translate{grid-template-columns:1fr;gap:1.5rem}.translate .arrow{transform:rotate(90deg)}}
+  .translate-side .lbl{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.66rem;color:var(--ink-light);
+    letter-spacing:.14em;text-transform:uppercase;
+    margin-bottom:1rem;
+    display:flex;justify-content:space-between;
+  }
+  .translate-side .lbl b{color:var(--ink);font-weight:600}
+  .stickies{display:flex;flex-direction:column;gap:.6rem}
+  .sticky{
+    background:#F0E6BD;
+    padding:.75rem .9rem;
+    font-family:'Caveat',cursive;
+    font-size:1.15rem;color:var(--pen);
+    line-height:1.25;
+    box-shadow:1px 1px 0 rgba(26,34,48,.08), 2px 3px 6px rgba(26,34,48,.07);
+    transform:rotate(-1deg);
+    max-width:90%;
+  }
+  .sticky:nth-child(2){transform:rotate(.8deg);background:#E8D8F0;align-self:flex-end}
+  .sticky:nth-child(3){transform:rotate(-.4deg);background:#D9E5C4}
+  .sticky small{
+    display:block;font-family:'IBM Plex Mono',monospace;
+    font-size:.6rem;color:var(--ink-light);
+    letter-spacing:.1em;text-transform:uppercase;
+    margin-top:.4rem;transform:rotate(.3deg);
+  }
+  .arrow{
+    align-self:center;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.68rem;color:var(--accent);
+    letter-spacing:.18em;text-transform:uppercase;
+    text-align:center;line-height:1.4;
+    border:1px solid var(--accent);
+    padding:.6rem .8rem;border-radius:2px;
+    background:var(--accent-tint);
+  }
+  .arrow .glyph{
+    display:block;font-size:1.4rem;line-height:1;
+    margin-top:.3rem;color:var(--accent);
+  }
+  .records{display:flex;flex-direction:column;gap:.5rem}
+  .record{
+    border:1px solid var(--rule);background:#F4F5F1;
+    padding:.7rem .85rem;
+    font-family:'IBM Plex Mono',monospace;
+    display:grid;grid-template-columns:auto 1fr;gap:.4rem 1rem;
+    font-size:.74rem;
+  }
+  .record .k{color:var(--ink-light);letter-spacing:.06em;text-transform:uppercase;font-size:.62rem;align-self:center}
+  .record .v{color:var(--ink)}
+  .record .v.tag{
+    display:inline-block;background:var(--accent-tint);
+    color:var(--accent-deep);padding:.05rem .4rem;
+    border-radius:2px;font-size:.7rem;
+  }
+  .record .full{grid-column:1/-1;font-family:'Source Serif 4',Georgia,serif;
+    font-style:italic;font-size:.88rem;color:var(--ink);line-height:1.4;
+    border-top:1px dashed var(--rule);padding-top:.4rem;margin-top:.2rem;
+  }
+
+  .margins{
+    display:flex;flex-direction:column;gap:.9rem;
+    margin:0;
+  }
+  @media(max-width:980px){
+    .margins{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1rem 0}
+  }
+  @media(max-width:720px){.margins{grid-template-columns:1fr}}
+  .margin-note{
+    background:#FFF8C7;
+    border:1px solid #E6D88A;
+    border-left:3px solid var(--accent);
+    padding:.85rem 1rem 1rem;
+    box-shadow:0 6px 12px rgba(20,18,12,.10), 0 1px 2px rgba(20,18,12,.08);
+    transform:rotate(-1.2deg);
+    transform-origin:top left;
+  }
+  .margin-note:nth-child(2){transform:rotate(1.4deg);background:#FFE9C0;border-color:#E6C788;border-left-color:var(--accent)}
+  .margin-note:nth-child(3){transform:rotate(-.6deg);background:#E6F0CC;border-color:#C5D49A;border-left-color:var(--blueprint)}
+  .margin-note:nth-child(4){transform:rotate(.9deg);background:#FCD8C9;border-color:#E5B19E;border-left-color:var(--accent)}
+  .margin-note .src{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+    color:rgba(26,34,48,.5);margin-bottom:.4rem;
+  }
+  .margin-note .text{
+    font-family:'Caveat',cursive;
+    font-size:1.2rem;line-height:1.25;color:#1A2230;
+  }
+  .diptych{
+    display:grid;grid-template-columns:1fr 1fr;gap:2rem;
+    margin:2rem 0 2.5rem;
+    align-items:start;
+  }
+  @media(max-width:880px){.diptych{grid-template-columns:1fr;gap:2.5rem}}
+  .dip-cap{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.7rem;color:rgba(26,34,48,.7);
+    letter-spacing:.12em;text-transform:none;
+    margin-top:.8rem;
+    border-top:1px solid rgba(26,34,48,.25);
+    padding-top:.55rem;line-height:1.5;
+  }
+  .dip-cap b{
+    color:var(--paper-night);font-weight:600;
+    font-size:.66rem;display:block;margin-bottom:.25rem;letter-spacing:.14em;text-transform:uppercase;
+  }
+  figcaption.dip-cap.before b{color:var(--blueprint-deep)}
+  figcaption.dip-cap.after b{color:var(--accent-deep)}
+
+  /* TM page mock — cyanotype/blueprint inflected */
+  .tmpage{
+    background:#F4F4EE;
+    border:1px solid var(--blueprint);
+    padding:1.4rem 1.2rem 1.2rem;
+    position:relative;
+    box-shadow:1px 2px 0 rgba(26,34,48,.05);
+    aspect-ratio:8.5/11;
+    overflow:hidden;
+    font-family:'Inter',sans-serif;
+  }
+  .tmpage::before{
+    /* dog-eared corner */
+    content:'';position:absolute;top:0;right:0;
+    width:34px;height:34px;
+    background:linear-gradient(225deg, var(--paper-3) 49%, transparent 50%);
+  }
+  .tm-hd{
+    display:flex;justify-content:space-between;align-items:baseline;
+    border-bottom:1.5px solid var(--blueprint);
+    padding-bottom:.4rem;margin-bottom:.8rem;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.58rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--blueprint);
+  }
+  .tm-hd b{color:var(--blueprint-deep);font-weight:700}
+  .tm-title{color:var(--blueprint-deep)}
+  .tm-section{color:var(--blueprint);opacity:.85}
+  .tm-title{
+    font-family:'Source Serif 4',Georgia,serif;
+    font-size:1rem;font-weight:600;color:var(--ink);
+    letter-spacing:.02em;margin-bottom:.6rem;
+  }
+  .tm-section{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-light);margin:.7rem 0 .35rem;
+  }
+  .tm-step{
+    font-size:.72rem;color:var(--ink-mid);line-height:1.55;
+    padding:.18rem 0;display:flex;gap:.5rem;
+  }
+  .tm-step .num{color:var(--ink-light);min-width:1.5rem;font-family:'IBM Plex Mono',monospace}
+  .tm-step.struck{color:var(--ink-light)}
+  .tm-step.struck .body{position:relative;display:inline-block}
+  .tm-step.struck .body::after{
+    content:'';position:absolute;left:-2px;right:-2px;top:48%;height:2px;
+    background:var(--accent);transform:rotate(-1.5deg);
+  }
+
+  /* sticky note — punchier */
+  .sticky{
+    position:absolute;
+    background:#F4D34A;
+    padding:.65rem .8rem;
+    font-family:'Caveat',cursive;
+    font-weight:600;
+    font-size:1.05rem;color:#0E1620;
+    line-height:1.15;
+    box-shadow:2px 3px 8px rgba(14,22,32,.28), 0 1px 0 rgba(14,22,32,.12);
+    max-width:148px;
+  }
+  .sticky.s1{top:18%;right:-12px;transform:rotate(3.5deg)}
+  .sticky.s2{bottom:13%;left:-14px;transform:rotate(-2.5deg);background:#F0A98A}
+  .sticky small{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.5rem;color:#475262;letter-spacing:.1em;
+    text-transform:uppercase;margin-top:.25rem;transform:rotate(-1deg);
+  }
+
+  /* handwritten correction by struck line */
+  .handwrite{
+    font-family:'Caveat',cursive;
+    color:var(--accent-deep);font-size:1.1rem;font-weight:600;
+    line-height:1;display:inline-block;
+    transform:rotate(-2deg);margin-left:.45rem;
+  }
+
+  /* FRO logged entry mock — copper inflected */
+  .froentry{
+    background:#F8F2EA;
+    border:1px solid var(--accent);
+    padding:1.2rem 1.2rem 1.3rem;
+    aspect-ratio:8.5/11;
+    overflow:hidden;
+    font-family:'Inter',sans-serif;
+  }
+  .fr-hd{
+    display:flex;justify-content:space-between;align-items:baseline;
+    border-bottom:1.5px solid var(--accent);
+    padding-bottom:.4rem;margin-bottom:.8rem;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.58rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--accent);
+  }
+  .fr-hd b{color:var(--accent-deep);font-weight:700}
+  .fr-hd .pip{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--accent);margin-right:.3rem;vertical-align:1px}
+  .fr-title{color:var(--accent-deep)}
+  .fr-title{
+    font-family:'Source Serif 4',Georgia,serif;
+    font-size:1rem;font-weight:600;color:var(--ink);
+    margin-bottom:.55rem;
+  }
+  .fr-meta{
+    display:grid;grid-template-columns:auto 1fr;
+    gap:.25rem .8rem;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.6rem;color:var(--ink-mid);letter-spacing:.04em;
+    margin-bottom:.7rem;
+  }
+  .fr-meta .l{color:var(--ink-light);font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;align-self:center}
+  .fr-meta .v{color:var(--ink)}
+  .fr-section{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-light);margin:.6rem 0 .3rem;
+    border-top:1px dashed var(--rule);padding-top:.4rem;
+  }
+  .fr-row{font-size:.7rem;color:var(--ink);line-height:1.5;padding:.12rem 0}
+  .fr-row.note{color:var(--ink-mid);font-style:italic}
+  .fr-row b{color:var(--accent);font-weight:600;font-style:normal;background:rgba(122,74,40,.12);padding:0 3px;border-radius:1px}
+  .fr-tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono',monospace;font-size:.55rem;
+    color:var(--ink-mid);border:1px solid var(--rule-strong);
+    padding:.1rem .4rem;border-radius:1px;margin:.1rem .25rem .1rem 0;
+    letter-spacing:.04em;
+  }
+  .plates-band{padding:4rem 0;background:var(--ink-night);border-top:1px solid #8E948A;border-bottom:1px solid #8E948A;background-image:radial-gradient(rgba(26,34,48,.10) 1px,transparent 1.2px);background-size:18px 18px}
+  .plates{
+    padding:4rem 0 2rem;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:2.5rem;
+    max-width:1100px;margin:0 auto;
+  }
+  @media(max-width:900px){.plates{grid-template-columns:1fr 1fr}}
+  @media(max-width:600px){.plates{grid-template-columns:1fr}}
+  .plate{display:flex;flex-direction:column;gap:.8rem}
+  .plate .frame{
+    background:var(--paper-2);
+    border:1px solid var(--rule-strong);
+    padding:1rem 1rem .4rem;
+    aspect-ratio:1206/2400;
+    display:flex;justify-content:center;align-items:flex-start;
+    position:relative;overflow:hidden;
+  }
+  .plate .frame img{
+    width:100%;height:auto;
+    max-height:100%;
+    border-radius:14px;
+    object-fit:contain;
+    object-position:top center;
+    box-shadow:0 1px 0 rgba(26,34,48,.08), 0 8px 24px -12px rgba(26,34,48,.18);
+    display:block;
+  }
+  .plate .frame .ph{
+    width:100%;height:100%;
+    border-radius:18px;
+    background:
+      repeating-linear-gradient(45deg,
+        rgba(26,34,48,.04) 0 6px,
+        rgba(26,34,48,.08) 6px 12px),
+      var(--paper);
+    border:1px solid var(--rule);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--ink-light);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;
+    text-align:center;padding:1rem;
+  }
+  .plate .frame .corner{position:absolute;width:14px;height:14px;border:1px solid var(--rule-strong)}
+  .plate .frame .corner.tl{top:.4rem;left:.4rem;border-right:none;border-bottom:none}
+  .plate .frame .corner.tr{top:.4rem;right:.4rem;border-left:none;border-bottom:none}
+  .plate .frame .corner.bl{bottom:.4rem;left:.4rem;border-right:none;border-top:none}
+  .plate .frame .corner.br{bottom:.4rem;right:.4rem;border-left:none;border-top:none}
+  .plate .cap{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.72rem;color:var(--ink-mid);
+    letter-spacing:.04em;
+    border-top:1px solid var(--ink);
+    padding-top:.5rem;line-height:1.45;
+  }
+  .plate .cap b{
+    color:var(--ink);font-weight:600;
+    text-transform:uppercase;letter-spacing:.1em;
+    font-size:.68rem;display:block;margin-bottom:.2rem;
+  }
+
+  .workflow{
+    padding:5rem 0 4rem;
+    border-top:1px solid var(--rule);
+  }
+  .workflow .section-head{border-bottom-color:rgba(26,34,48,.25)}
+  .workflow .section-head .num{color:var(--blueprint)}
+  .workflow .section-head .right{color:rgba(26,34,48,.55)}
+  .flow{
+    display:grid;grid-template-columns:repeat(5,1fr);gap:0;
+    border:1px solid rgba(26,34,48,.35);
+    background:rgba(242,239,230,.45);
+  }
+  @media(max-width:880px){.flow{grid-template-columns:1fr 1fr}}
+  .flow .step{padding:1.6rem 1.2rem;border-right:1px solid rgba(26,34,48,.18)}
+  .flow .step:last-child{border-right:none}
+  @media(max-width:880px){
+    .flow .step{border-right:1px solid rgba(26,34,48,.18);border-bottom:1px solid rgba(26,34,48,.18)}
+    .flow .step:nth-child(2n){border-right:none}
+    .flow .step:nth-last-child(-n+1){border-bottom:none}
+    .flow .step:nth-last-child(2):nth-child(odd){border-bottom:none}
+  }
+  .flow .n{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.68rem;color:var(--blueprint);
+    letter-spacing:.14em;margin-bottom:.5rem;font-weight:700;
+  }
+  .flow .step h4{
+    font-family:'Source Serif 4',Georgia,serif;
+    font-size:1.1rem;font-weight:600;margin-bottom:.4rem;
+  }
+  .flow .step p{font-size:.88rem;color:var(--ink-mid);line-height:1.5}
+  .flow .step.passive{background:rgba(26,34,48,.04)}
+  .flow .step.passive h4{color:var(--ink-mid);font-style:italic}
+  .flow .step.passive .n{color:var(--ink-light)}
+
+  /* FACTS */
+  .facts{
+    padding:3rem 0;margin-top:2rem;
+    display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+  }
+  @media(max-width:720px){.facts{grid-template-columns:1fr 1fr;gap:2rem 1.5rem}}
+  .fact .v{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:1.5rem;color:var(--ink);font-weight:700;letter-spacing:-.01em;
+  }
+  .fact .l{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.7rem;color:var(--ink-mid);
+    letter-spacing:.1em;text-transform:uppercase;margin-top:.35rem;
+  }
+
+  /* CLOSER */
+  .closer{padding:5rem 0;text-align:left;background:var(--ink-night);border-top:1px solid #8E948A;border-bottom:1px solid #8E948A;background-image:radial-gradient(rgba(26,34,48,.10) 1px,transparent 1.2px);background-size:18px 18px}
+  .closer .lede{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.74rem;color:var(--blueprint);
+    letter-spacing:.16em;text-transform:uppercase;margin-bottom:1rem;font-weight:700;
+  }
+  .closer p{
+    font-family:'Source Serif 4',Georgia,serif;
+    font-size:1.5rem;color:var(--ink);
+    line-height:1.5;font-weight:500;
+    max-width:32ch;margin-bottom:1.5rem;
+  }
+  .closer p em{font-style:italic;color:var(--accent)}
+  .closer .price{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.86rem;color:var(--ink-mid);
+    margin:1rem 0 1.5rem;letter-spacing:.04em;
+  }
+  .closer .price b{color:var(--ink)}
+
+  /* FOOTER */
+  footer{padding:3rem 0 4rem;border-top:2px solid var(--ink);margin-top:1rem}
+  .footrow{
+    display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2rem;
+    font-family:'IBM Plex Mono',monospace;font-size:.78rem;
+  }
+  @media(max-width:720px){.footrow{grid-template-columns:1fr 1fr}}
+  .footrow .lbl{
+    font-size:.64rem;color:var(--ink-light);
+    letter-spacing:.14em;text-transform:uppercase;margin-bottom:.5rem;
+  }
+  .footrow .val{color:var(--ink);line-height:1.5}
+  .footrow a{display:block;padding:.18rem 0;color:var(--accent)}
+
+  .stamp{
+    margin-top:2.5rem;padding-top:1rem;
+    border-top:1px solid var(--rule);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.68rem;color:var(--ink-light);
+    letter-spacing:.08em;
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;
+  }
+</style>
 </head>
 <body>
+
 <nav>
-  <a href="./" class="nav-brand"><span>FRO</span> // MAINTENANCE REF</a>
-  <ul class="nav-links">
-    <li><a href="privacy">Privacy</a></li>
-    <li><a href="support">Support</a></li>
-  </ul>
+  <div class="nav-inner">
+    <span class="brand"><b>FRO</b> · MAINTENANCE REFERENCE</span>
+    <ul class="nav-links">
+      <li><a href="#logbook">§ 1 Logbook</a></li>
+      <li><a href="#what">§ 2 Scope</a></li>
+      <li><a href="#notebook">§ 3 Notes</a></li>
+      <li><a href="privacy.html">Privacy</a></li>
+      <li><a href="support.html">Support</a></li>
+    </ul>
+  </div>
 </nav>
 
-<section class="hero">
-  <div class="hero-label">Field Reference &mdash; Rev 1.0</div>
-  <h1>Your personal<br><em>maintenance reference</em> library</h1>
-  <p class="hero-sub">Your personal maintenance reference library. Log jobs, manage your garage, track time on task, and watch what's due for calibration. Build a searchable record of what you know, what you've done, and what to watch for next time.</p>
-  <div class="cta-group">
-    <a href="https://apps.apple.com/app/fro-maintenance-reference/id6758827518" class="hero-cta">
-      <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store">
-    </a>
-    <p class="hero-price"><strong>$2.99</strong> &mdash; No subscriptions. No ads. No recurring fees.</p>
-  </div>
-</section>
-
-<div class="value-strip">
-  <div class="value-chip"><div class="dot"></div>Works where you work</div>
-  <div class="value-chip"><div class="dot"></div>No internet required</div>
-  <div class="value-chip"><div class="dot"></div>Your data stays yours</div>
+<div class="docstrip">
+  <span class="pip"></span>FOR REFERENCE ONLY · <b>Always subordinate to your Technical Manuals, Work Cards, and approved procedures.</b>
 </div>
 
-<div class="section-divider"><span>Capabilities</span></div>
-<section class="features">
-  <div class="features-grid">
-    <div class="feature-card">
-      <span class="feature-ref">REF-01</span>
-      <div class="feature-icon">&#9881;</div>
-      <h3>Job Logging</h3>
-      <p>Record what you did, what you used, and what to remember next time. Tools, consumables, hazmat, parts, and free-form notes for every job.</p>
+<header class="hero">
+  <div class="wrap">
+    <div class="meta">
+      <span>iOS 17+</span><span>App Store · Build 27</span><span>$2.99 one-time</span>
     </div>
-    <div class="feature-card">
-      <span class="feature-ref">REF-02</span>
-      <div class="feature-icon">&#128295;</div>
-      <h3>Tool Inventory</h3>
-      <p>Track every tool you own &mdash; condition, location, calibration dates. Organize into sets and kits. Know what's borrowed and by whom.</p>
+    <h1>FRO doesn't replace your TMs.<br>It remembers <em>what they don't.</em></h1>
+    <p class="sub">
+      Which socket fit. What hazmat actually worked. The alternate you ended up using when the spec tool was missing. Who you borrowed it from. <b>The stuff that lives in your notebook</b> — except now you can search it, share it, and find it three years from now.
+    </p>
+    <div class="cta">
+      <a class="cta-badge" href="https://apps.apple.com/app/fro-maintenance-reference/id6758827518">
+        <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store">
+      </a>
+      <span class="price"><b>$2.99</b> · No subscriptions, no ads, no accounts</span>
     </div>
-    <div class="feature-card">
-      <span class="feature-ref">REF-03</span>
-      <div class="feature-icon">&#128269;</div>
-      <h3>Instant Recall</h3>
-      <p>Full-text search across all jobs and tools. Find what you used last time on a similar task in seconds.</p>
+  </div>
+</header>
+
+<section class="audience">
+  <div class="wrap">
+    <div class="row">
+      <span class="ax-label">Built for</span>
+      <span class="ax">A&amp;P students</span>
+      <span class="ax">Civilian A&amp;P</span>
+      <span class="ax">Crew chiefs</span>
+      <span class="ax">MRO</span>
+      <span class="ax">GA &amp; EAB</span>
+      <span class="ax">Indie A&amp;Ps</span>
     </div>
-    <div class="feature-card">
-      <span class="feature-ref">REF-04</span>
-      <div class="feature-icon">&#9992;</div>
-      <h3>Fully Offline</h3>
-      <p>No internet required, ever. All data stays on your device. Works in hangars, flight lines, and maintenance bays with zero connectivity.</p>
+    <p class="audience-line">For the mechanic who'll see this job again — in three months, a year, or three years.</p>
+  </div>
+</section>
+
+<section class="logbook" id="logbook">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="num">§ 1</span>
+      <h2>The logbook a mechanic never had</h2>
+      <span class="right">Personal logbook</span>
     </div>
-    <div class="feature-card">
-      <span class="feature-ref">REF-05</span>
-      <div class="feature-icon">&#128196;</div>
-      <h3>PDF Reports</h3>
-      <p>Generate professional reports for your records. Export individual jobs or batch-export your entire log.</p>
-    </div>
-    <div class="feature-card">
-      <span class="feature-ref">REF-06</span>
-      <div class="feature-icon">&#128257;</div>
-      <h3>Share with Teammates</h3>
-      <p>Export jobs and tools via AirDrop or Files. Import references from colleagues. You control what you share and with whom.</p>
-    </div>
-    <div class="feature-card">
-      <span class="feature-ref">REF-07</span>
-      <div class="feature-icon">&#9201;</div>
-      <h3>Time Tracking</h3>
-      <p>Clock in to jobs, watch elapsed time per task, and review hours by job in the timecard. Know how long each task actually took, not just how long it felt.</p>
-    </div>
-    <div class="feature-card">
-      <span class="feature-ref">REF-08</span>
-      <div class="feature-icon">&#128737;</div>
-      <h3>Calibration &amp; Borrow/Lend</h3>
-      <p>Track tool calibration dates with green / yellow / red status. Quick-lend tools and track who has what. Know what's in the field and when it's due back.</p>
+    <div class="logbook-grid">
+      <div class="logbook-copy">
+        <p class="lede">Pilots have logbooks.<br>Aircraft have logbooks.<br><em>Now you have one too.</em></p>
+        <p>Treat it like a flight logbook. One entry per job. The first few months feel light — by year two, you've got a real reference. By year five, it's the most useful book in your toolbox, and the only one written entirely in your own voice.</p>
+        <ul>
+          <li><b>Month 1</b><span class="qty">the loop clicks</span></li>
+          <li><b>Year 2</b><span class="qty">~50 jobs</span></li>
+          <li><b>Year 3</b><span class="qty">~125 jobs</span></li>
+          <li><b>Year 5</b><span class="qty">~250 jobs</span></li>
+        </ul>
+        <div class="counters" aria-hidden="true">
+          <span><b>One</b> entry per job</span>
+          <span><b>Years</b> of context</span>
+          <span><b>0</b> ads</span>
+          <span><b>0</b> accounts</span>
+          <span><b>Yours</b> to keep</span>
+        </div>
+      </div>
+      <div class="nbpage-wrap">
+        <svg class="nbpage" viewBox="0 0 540 420" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <filter id="nbgrain" x="0" y="0" width="100%" height="100%">
+              <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3"/>
+              <feColorMatrix values="0 0 0 0 .42  0 0 0 0 .32  0 0 0 0 .18  0 0 0 .06 0"/>
+              <feComposite in2="SourceGraphic" operator="in"/>
+            </filter>
+          </defs>
+          <g transform="rotate(-1.2 270 210)">
+            <!-- page back/shadow -->
+            <rect x="14" y="18" width="512" height="394" fill="#E8DFC9" opacity=".55"/>
+            <!-- main page -->
+            <rect x="10" y="14" width="512" height="394" fill="#FAF6E8" stroke="#7A4A28" stroke-width=".6"/>
+            <!-- subtle grain -->
+            <rect x="10" y="14" width="512" height="394" fill="#FAF6E8" filter="url(#nbgrain)" opacity=".4"/>
+            <!-- horizontal rules -->
+            <g stroke="#6B8FB8" stroke-width=".5" opacity=".55">
+              <line x1="10" y1="58" x2="522" y2="58"/>
+              <line x1="10" y1="84" x2="522" y2="84"/>
+              <line x1="10" y1="110" x2="522" y2="110"/>
+              <line x1="10" y1="136" x2="522" y2="136"/>
+              <line x1="10" y1="162" x2="522" y2="162"/>
+              <line x1="10" y1="188" x2="522" y2="188"/>
+              <line x1="10" y1="214" x2="522" y2="214"/>
+              <line x1="10" y1="240" x2="522" y2="240"/>
+              <line x1="10" y1="266" x2="522" y2="266"/>
+              <line x1="10" y1="292" x2="522" y2="292"/>
+              <line x1="10" y1="318" x2="522" y2="318"/>
+              <line x1="10" y1="344" x2="522" y2="344"/>
+              <line x1="10" y1="370" x2="522" y2="370"/>
+            </g>
+            <!-- red margin rule -->
+            <line x1="68" y1="14" x2="68" y2="408" stroke="#A04A2A" stroke-width=".75" opacity=".6"/>
+            <!-- punch holes hint -->
+            <circle cx="40" cy="36" r="4" fill="#E8DFC9" stroke="#A09680" stroke-width=".4" opacity=".7"/>
+            <circle cx="40" cy="386" r="4" fill="#E8DFC9" stroke="#A09680" stroke-width=".4" opacity=".7"/>
+
+            <!-- watermark: FOR REFERENCE ONLY / EXAMPLE -->
+            <g transform="translate(270 210) rotate(-22)" opacity=".11">
+              <text text-anchor="middle" font-family="IBM Plex Mono" font-size="36" font-weight="700" fill="#1A2230" letter-spacing="6">FOR REFERENCE ONLY</text>
+              <text y="36" text-anchor="middle" font-family="IBM Plex Mono" font-size="20" font-weight="500" fill="#1A2230" letter-spacing="10">EXAMPLE ENTRY</text>
+            </g>
+
+            <!-- handwritten job entry (Caveat throughout) -->
+            <!-- date / job header -->
+            <text x="80" y="52" font-family="Caveat" font-size="20" fill="#1A2230" font-weight="600">2026-01-28 · S-70A · tail № 89-26189</text>
+
+            <!-- TASK label + body, label still mono, body handwritten -->
+            <text x="80" y="78" font-family="IBM Plex Mono" font-size="8" fill="#475262" letter-spacing="1.6">TASK</text>
+            <text x="120" y="80" font-family="Caveat" font-size="20" fill="#1A2230">drained &amp; serviced tail rotor gearbox.</text>
+            <text x="80" y="106" font-family="Caveat" font-size="20" fill="#1A2230">cleaned &amp; inspected chip detector — clear.</text>
+
+            <!-- REF -->
+            <text x="80" y="132" font-family="IBM Plex Mono" font-size="8" fill="#475262" letter-spacing="1.6">REF</text>
+            <text x="120" y="134" font-family="Caveat" font-size="20" fill="#1A2230">work card per the airframe manual</text>
+
+            <!-- TOOLS -->
+            <text x="80" y="158" font-family="IBM Plex Mono" font-size="8" fill="#475262" letter-spacing="1.6">TOOLS</text>
+            <text x="120" y="160" font-family="Caveat" font-size="20" fill="#1A2230">flexible funnel · catch can · safety wire pliers</text>
+
+            <!-- HAZMAT -->
+            <text x="80" y="184" font-family="IBM Plex Mono" font-size="8" fill="#475262" letter-spacing="1.6">HAZMAT</text>
+            <text x="120" y="186" font-family="Caveat" font-size="20" fill="#1A2230">used gear oil → sealed sample container</text>
+
+            <!-- TIME -->
+            <text x="80" y="210" font-family="IBM Plex Mono" font-size="8" fill="#475262" letter-spacing="1.6">TIME</text>
+            <text x="120" y="212" font-family="Caveat" font-size="20" fill="#1A2230">on task — 1h 42m</text>
+
+            <!-- handwritten note in copper -->
+            <text x="80" y="258" font-family="Caveat" font-size="22" fill="#B85A2A">→ next time: bring the flexible funnel</text>
+            <text x="80" y="284" font-family="Caveat" font-size="22" fill="#B85A2A">and a couple rags.</text>
+
+            <!-- underline doodle -->
+            <path d="M 80 292 q 80 -4 200 0" stroke="#B85A2A" stroke-width=".7" fill="none" opacity=".7"/>
+
+            <!-- bottom corner: page number + tag -->
+            <text x="80" y="395" font-family="IBM Plex Mono" font-size="7.5" fill="#475262" letter-spacing="1.6">PG. 217 · BOOK III</text>
+            <text x="510" y="395" text-anchor="end" font-family="IBM Plex Mono" font-size="7.5" fill="#1E3A5F" letter-spacing="1.6" font-weight="700">FIG. §01.A — ONE ENTRY</text>
+          </g>
+        </svg>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="principles">
-  <div class="principles-card">
-    <div class="principle"><strong>100% Offline</strong><span>No servers, no cloud</span></div>
-    <div class="principle"><strong>Zero Data Collection</strong><span>Nothing leaves your device</span></div>
-    <div class="principle"><strong>One-Time Purchase</strong><span>No subscriptions, no ads</span></div>
-    <div class="principle"><strong>Built for Mechanics</strong><span>Built for the job</span></div>
+<section class="section" id="what">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="num">§ 2</span>
+      <h2>What it does, and what it doesn't</h2>
+      <span class="right">Scope</span>
+    </div>
+    <div class="twocol">
+      <div class="col does">
+        <h3>It does <span class="tag">07</span></h3>
+        <ul>
+          <li>Logs jobs after you finish them — aircraft, system, what you used, what you learned</li>
+          <li>Keeps your tool inventory: condition, location, calibration dates, who borrowed what</li>
+          <li>Searches every job and tool you've ever logged. Fuzzy matching, no typing perfect</li>
+          <li>Generates printable PDF reports for the binder or the toolbox</li>
+          <li>Exports single jobs or tool kits for AirDrop to a teammate</li>
+          <li>Tracks time on task with a punch clock — actual hours, not guessed hours</li>
+          <li>Runs fully offline. Hangars, flight lines, bays with no signal</li>
+        </ul>
+      </div>
+      <div class="col doesnt">
+        <h3>It doesn't <span class="tag">06</span></h3>
+        <ul>
+          <li>Replace Technical Manuals, Work Cards, or approved procedures</li>
+          <li>Sign off on anything. There are no approvals, audit trails, or QA workflows</li>
+          <li>Sync to a cloud. Your data stays on your device</li>
+          <li>Need an account or login</li>
+          <li>Collect telemetry, analytics, or usage data of any kind</li>
+          <li>Charge a subscription. $2.99 once, that's the whole transaction</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="notebook" id="notebook">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="num">§ 3</span>
+      <h2>Sticky notes, made searchable</h2>
+      <span class="right">Premise</span>
+    </div>
+    <div class="body">
+      <p class="lede">Every TM had them. Yellow stickies, pencil margins, dog-eared pages with arrows. The real knowledge — the stuff that wasn't in the procedure but mattered every time you ran it.</p>
+      <div class="margins">
+        <div class="margin-note">
+          <div class="src">Sticky · TM pg 4-12</div>
+          <div class="text">“Don't use this socket — it rounds the head. Try the deep 12pt.”</div>
+        </div>
+        <div class="margin-note">
+          <div class="src">Margin · TM pg 7-3</div>
+          <div class="text">“Ground strap goes here, not where the diagram shows.”</div>
+        </div>
+        <div class="margin-note">
+          <div class="src">Tab · TM pg 11-9</div>
+          <div class="text">“Use the alternate hazmat. Spec one ate the seal twice.”</div>
+        </div>
+        <div class="margin-note">
+          <div class="src">Pencil · TM pg 3-7</div>
+          <div class="text">“Torque to 32 ft-lb here. Spec calls for 28 — strips threads on this airframe.”</div>
+        </div>
+      </div>
+      <p style="margin-top:2rem">Digital manuals don't have margins. PDFs don't take stickies. The shared knowledge that used to live in those notes is gone — or sitting in someone's locker, on the back of a work card, only useful to one person.</p>
+
+      <div class="diptych">
+        <figure>
+          <div class="tmpage">
+            <div class="tm-hd"><span><b>TM 1-1500-204</b> · PG 7-3</span><span>FIG 7-2</span></div>
+            <div class="tm-title">Engine Cowling — Removal</div>
+            <div class="tm-section">7.3.2 · Procedure</div>
+            <div class="tm-step"><span class="num">01.</span><span>Disconnect electrical bonding strap.</span></div>
+            <div class="tm-step struck"><span class="num">02.</span><span class="body">Apply torque to fastener per Fig 4-12 spec.</span><span class="handwrite">use 12pt deep socket</span></div>
+            <div class="tm-step"><span class="num">03.</span><span>Remove forward fairing screws (qty 6).</span></div>
+            <div class="tm-step"><span class="num">04.</span><span>Lift cowl assembly clear of mounting brackets.</span></div>
+            <div class="tm-section">7.3.3 · Cautions</div>
+            <div class="tm-step"><span class="num">—</span><span>Ground strap routing per diagram 7-2.</span></div>
+            <div class="tm-step"><span class="num">—</span><span>Use approved hazmat per appendix B.</span></div>
+            <div class="sticky s1">spec socket rounds the head every time<small>— J. Reyes, 4/12</small></div>
+            <div class="sticky s2">ground strap goes left of bracket, not right — fixed twice<small>see pg 11-9</small></div>
+          </div>
+          <figcaption class="dip-cap before"><b>Before — the TM in the binder</b>Knowledge lives on stickies and pencil margins. Useful to whoever's holding the page.</figcaption>
+        </figure>
+        <figure>
+          <div class="froentry">
+            <div class="fr-hd"><span><b>FRO</b> · JOB #0247</span><span><span class="pip"></span>LOGGED 04/12</span></div>
+            <div class="fr-title">Engine Cowling — Removal</div>
+            <div class="fr-meta">
+              <span class="l">Aircraft</span><span class="v">UH-60M · 21-26789</span>
+              <span class="l">System</span><span class="v">Powerplant · Cowling</span>
+              <span class="l">Time on task</span><span class="v">1 h 40 m</span>
+              <span class="l">Reference</span><span class="v">TM 1-1500-204 pg 7-3</span>
+            </div>
+            <div class="fr-section">Tools used</div>
+            <div class="fr-row"><span class="fr-tag">12pt deep socket ½"</span><span class="fr-tag">torque wrench cal 02/26</span><span class="fr-tag">cowling stand</span></div>
+            <div class="fr-section">Notes for next time</div>
+            <div class="fr-row note">Spec socket from TM <b>rounds the head</b> — use the deep 12pt instead. Confirmed on two prior jobs.</div>
+            <div class="fr-row note">Ground strap routes <b>left</b> of the bracket. The diagram on pg 7-2 shows it on the right; that's wrong on this airframe.</div>
+            <div class="fr-section">Search hits this entry on</div>
+            <div class="fr-row"><span class="fr-tag">cowling</span><span class="fr-tag">socket rounds</span><span class="fr-tag">ground strap</span><span class="fr-tag">UH-60M</span><span class="fr-tag">pg 7-3</span></div>
+          </div>
+          <figcaption class="dip-cap after"><b>After — the same notes, in FRO</b>Searchable, readable, shareable. The sticky finally has a home.</figcaption>
+        </figure>
+      </div>
+
+      <p class="close">FRO is the format those notes deserved all along. <strong>Searchable</strong> — by aircraft, system, or the word you can almost remember. <strong>Readable</strong> — your voice, your structure, six months or six years later. <strong>Shareable</strong> — AirDrop a job to the new mechanic on the line, or trade the whole library with a teammate. The sticky note finally gets a system around it.</p>
+      <span class="signoff">— same notes. Same voice. Just findable now.<small>Author's note · Build 27</small></span>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="section-head" style="margin-top:4rem">
+    <span class="num">§ 4</span>
+    <h2>Plates</h2>
+    <span class="right">Build 27 · iPhone 17 Pro Max</span>
+  </div>
+</section>
+
+<section class="plates-band">
+<div class="wrap">
+  <div class="plates">
+    <figure class="plate">
+      <div class="frame">
+        <span class="corner tl"></span><span class="corner tr"></span>
+        <span class="corner bl"></span><span class="corner br"></span>
+        <img src="assets/dashboard.png" alt="FRO Dashboard">
+      </div>
+      <figcaption class="cap"><b>Fig. 1 — Dashboard</b>Recent jobs, calibration status, time on task. The disclaimer banner is always visible.</figcaption>
+    </figure>
+    <figure class="plate">
+      <div class="frame">
+        <span class="corner tl"></span><span class="corner tr"></span>
+        <span class="corner bl"></span><span class="corner br"></span>
+        <img src="assets/job-detail.png" alt="FRO Job Detail">
+      </div>
+      <figcaption class="cap"><b>Fig. 2 — Job Detail</b>Aircraft, system, tools used, hazmat, parts, notes. Free-form recommendations for next time.</figcaption>
+    </figure>
+    <figure class="plate">
+      <div class="frame">
+        <span class="corner tl"></span><span class="corner tr"></span>
+        <span class="corner bl"></span><span class="corner br"></span>
+        <img src="assets/calibration.png" alt="FRO Calibration Tracker">
+      </div>
+      <figcaption class="cap"><b>Fig. 3 — Calibration Tracker</b>Green / yellow / red status on every tool with a calibration date. Scoped to Personal vs. Shop.</figcaption>
+    </figure>
+  </div>
+</div>
+</section>
+
+<section class="workflow">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="num">§ 5</span>
+      <h2>The loop</h2>
+      <span class="right">Retrospective workflow</span>
+    </div>
+    <div class="flow">
+      <div class="step"><div class="n">01</div><h4>Walk in prepared</h4><p>Search prior jobs on this airframe and system. Pull what you used last time and what to watch for.</p></div>
+      <div class="step passive"><div class="n">02</div><h4>Run the procedure</h4><p>The TM and Work Card stay in charge. FRO doesn't sign off, doesn't approve, doesn't get in the way.</p></div>
+      <div class="step"><div class="n">03</div><h4>Finish the job</h4><p>The TM tells you the procedure. FRO captures what isn't in the TM — the socket that fit, the alternate that worked.</p></div>
+      <div class="step"><div class="n">04</div><h4>Log it</h4><p>Aircraft, system, what you used, what to remember. Two minutes if you're slow.</p></div>
+      <div class="step"><div class="n">05</div><h4>Search next time</h4><p>Three months or three years later, the same airframe rolls in. The notebook is already open.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="facts">
+    <div class="fact"><div class="v">$2.99</div><div class="l">One-time price</div></div>
+    <div class="fact"><div class="v">0</div><div class="l">Bytes leave your device</div></div>
+    <div class="fact"><div class="v">100%</div><div class="l">Offline capable</div></div>
+    <div class="fact"><div class="v">iOS 17+</div><div class="l">iPhone &amp; iPad</div></div>
+  </div>
+</section>
+
+<section class="closer">
+  <div class="wrap">
+    <div class="lede">The whole pitch</div>
+    <p>It's the logbook a mechanic never had. <em>Now they do.</em></p>
+    <div class="price"><b>$2.99</b> once · No subscriptions · No accounts · No ads · No data collection</div>
+    <a class="cta-badge" href="https://apps.apple.com/app/fro-maintenance-reference/id6758827518">
+      <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store">
+    </a>
   </div>
 </section>
 
 <footer>
-  <div class="footer-links">
-    <a href="privacy">Privacy Policy</a>
-    <a href="support">Support</a>
+  <div class="wrap">
+    <div class="footrow">
+      <div>
+        <div class="lbl">Project</div>
+        <div class="val">FRO — For Reference Only<br>Personal logbook for aircraft mechanics</div>
+      </div>
+      <div>
+        <div class="lbl">App Store</div>
+        <a href="https://apps.apple.com/app/fro-maintenance-reference/id6758827518">Download</a>
+      </div>
+      <div>
+        <div class="lbl">Pages</div>
+        <a href="privacy.html">Privacy</a>
+        <a href="support.html">Support</a>
+      </div>
+      <div>
+        <div class="lbl">Copyright</div>
+        <div class="val">© 2026 Mark Enriquez</div>
+      </div>
+    </div>
+    <div class="stamp">
+      <span>FRO · v1.0.0 · Build 27</span>
+      <span>iOS 17+ · iPhone &amp; iPad</span>
+      <span>Document set: index · privacy · support</span>
+    </div>
   </div>
-  <p class="footer-copy">&copy; 2026 Mark Enriquez. All rights reserved.</p>
 </footer>
+
 </body>
 </html>
