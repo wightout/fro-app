@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UX show-and-tell · §3 diptych civilian alternatives</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EDEEEA; --paper-2:#E2E4DE;
+    --ink:#0E1620; --ink-mid:#2C3540; --ink-light:#6B7380;
+    --rule:#BBBFB6; --accent:#7A4A28; --accent-deep:#5A3518;
+    --blueprint:#1E3A5F; --blueprint-deep:#0F2440;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Inter',-apple-system,sans-serif;
+    background:var(--paper);color:var(--ink);line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(rgba(26,34,48,.06) 1px,transparent 1.2px);
+    background-size:16px 16px;
+    padding:3rem 2rem 6rem;
+  }
+  .wrap{max-width:1100px;margin:0 auto}
+  .pre{
+    font-family:'IBM Plex Mono',monospace;font-size:.7rem;
+    color:var(--ink-light);letter-spacing:.18em;text-transform:uppercase;
+    margin-bottom:1rem;
+  }
+  h1{
+    font-family:'Source Serif 4',Georgia,serif;
+    font-size:2.4rem;font-weight:600;line-height:1.15;
+    letter-spacing:-.02em;margin-bottom:1rem;max-width:24ch;
+  }
+  .lede{
+    font-family:'Source Serif 4',Georgia,serif;
+    font-size:1.2rem;color:var(--ink-mid);max-width:60ch;
+    line-height:1.55;margin-bottom:2.5rem;
+  }
+  .lede em{color:var(--accent);font-style:italic}
+  .frame{
+    border:1px solid var(--rule);background:#fff;
+    margin-bottom:3rem;
+    box-shadow:0 8px 24px -12px rgba(26,34,48,.18);
+  }
+  .frame-head{
+    padding:1rem 1.4rem;border-bottom:1px solid var(--rule);
+    background:var(--paper-2);
+    display:flex;justify-content:space-between;align-items:baseline;gap:1rem;
+    flex-wrap:wrap;
+  }
+  .frame-head h2{
+    font-family:'Source Serif 4',Georgia,serif;font-size:1.3rem;
+    font-weight:600;letter-spacing:-.01em;
+  }
+  .frame-head .tag{
+    font-family:'IBM Plex Mono',monospace;font-size:.68rem;
+    color:var(--accent-deep);background:rgba(122,74,40,.10);
+    border:1px solid var(--accent);padding:.18rem .55rem;border-radius:2px;
+    letter-spacing:.12em;text-transform:uppercase;font-weight:700;
+  }
+  .frame-head a.open{
+    margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:.7rem;
+    color:var(--accent);letter-spacing:.06em;
+  }
+  .frame iframe{
+    display:block;width:100%;border:0;background:transparent;
+  }
+  .pros-cons{
+    display:grid;grid-template-columns:1fr 1fr;gap:0;
+    border-top:1px solid var(--rule);
+  }
+  @media(max-width:720px){.pros-cons{grid-template-columns:1fr}}
+  .pros-cons .col{padding:1.1rem 1.4rem 1.3rem;font-size:.92rem}
+  .pros-cons .col + .col{border-left:1px solid var(--rule)}
+  @media(max-width:720px){.pros-cons .col + .col{border-left:none;border-top:1px solid var(--rule)}}
+  .pros-cons h3{
+    font-family:'IBM Plex Mono',monospace;font-size:.7rem;
+    letter-spacing:.14em;text-transform:uppercase;margin-bottom:.5rem;
+  }
+  .pros-cons .pros h3{color:var(--blueprint-deep)}
+  .pros-cons .cons h3{color:var(--accent-deep)}
+  .pros-cons ul{list-style:none}
+  .pros-cons li{
+    padding:.4rem 0;display:flex;gap:.6rem;color:var(--ink-mid);
+    border-bottom:1px dashed var(--rule);
+  }
+  .pros-cons li:last-child{border-bottom:none}
+  .pros-cons .pros li::before{content:'+';color:var(--blueprint);font-weight:700}
+  .pros-cons .cons li::before{content:'−';color:var(--accent);font-weight:700}
+  .pick{
+    margin-top:3rem;padding:2rem;
+    border:2px solid var(--ink);background:var(--paper-2);
+    font-family:'Source Serif 4',Georgia,serif;font-size:1.1rem;
+  }
+  .pick b{
+    font-family:'IBM Plex Mono',monospace;font-size:.7rem;
+    letter-spacing:.16em;text-transform:uppercase;
+    color:var(--accent-deep);display:block;margin-bottom:.6rem;
+  }
+  .pick em{color:var(--accent);font-style:italic}
+  .live-link{
+    font-family:'IBM Plex Mono',monospace;font-size:.78rem;
+    color:var(--accent);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="pre">UX show-and-tell · 2026-05-07 · §3 diptych civilian read</div>
+  <h1>The §3 diptych — military-only, or bilingual?</h1>
+  <p class="lede">The §3 diptych currently shows a US Army TM page next to a FRO entry. It lands hard for the military audience and reads as <em>authentic-but-foreign</em> for civilian A&Ps, who don't see TMs in their day. Four ways to handle that, ranked by visual cost. Pick one — I'll implement.</p>
+
+  <!-- CURRENT -->
+  <div class="frame">
+    <div class="frame-head">
+      <h2>Current state</h2>
+      <span class="tag">Live on site</span>
+      <a class="open" href="current.html" target="_blank">open full →</a>
+    </div>
+    <iframe src="current.html" height="900" loading="lazy"></iframe>
+    <div class="pros-cons">
+      <div class="col pros">
+        <h3>What it does well</h3>
+        <ul>
+          <li>Authentic to your military background — UH-60M is your home airframe</li>
+          <li>Already implemented and tested</li>
+          <li>Compact section (single diptych, baseline height)</li>
+        </ul>
+      </div>
+      <div class="col cons">
+        <h3>What it costs</h3>
+        <ul>
+          <li>Civilian A&Ps may read FRO as military-only and bounce</li>
+          <li>"TM 1-1500-204" is foreign jargon to a Cessna mechanic</li>
+          <li>Pills strip says "GA &amp; homebuilders" — but the diptych contradicts that breadth</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPTION A -->
+  <div class="frame">
+    <div class="frame-head">
+      <h2>Option A · Civilian swap</h2>
+      <span class="tag">Cessna 172 SMM</span>
+      <a class="open" href="option-a.html" target="_blank">open full →</a>
+    </div>
+    <iframe src="option-a.html" height="900" loading="lazy"></iframe>
+    <div class="pros-cons">
+      <div class="col pros">
+        <h3>What it does well</h3>
+        <ul>
+          <li>Same section height as current — no layout impact</li>
+          <li>Cessna 172 is the most universal civilian aircraft (≈40% of training fleet)</li>
+          <li>Real document number (D2069-1-13) and real procedure (Camlocs are how Cessna cowlings actually attach)</li>
+          <li>Readable to A&P students, IAs, GA owners, homebuilders</li>
+        </ul>
+      </div>
+      <div class="col cons">
+        <h3>What it costs</h3>
+        <ul>
+          <li>Loses the military authenticity that matched your background</li>
+          <li>Crew chiefs / military maintainers in the audience strip see a Cessna, not their world</li>
+          <li>Just trades one parochial example for another</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPTION B -->
+  <div class="frame">
+    <div class="frame-head">
+      <h2>Option B · Bilingual triptych</h2>
+      <span class="tag">TM + AMM + FRO</span>
+      <a class="open" href="option-b.html" target="_blank">open full →</a>
+    </div>
+    <iframe src="option-b.html" height="900" loading="lazy"></iframe>
+    <div class="pros-cons">
+      <div class="col pros">
+        <h3>What it does well</h3>
+        <ul>
+          <li>Both audiences see themselves represented — strongest "this is for everyone" read</li>
+          <li>Visualizes the core point: <em>one log, multiple pubs</em></li>
+          <li>Section grows ~50% (still fits in one band; not stacked)</li>
+        </ul>
+      </div>
+      <div class="col cons">
+        <h3>What it costs</h3>
+        <ul>
+          <li>Three columns at this width = each panel gets cramped (~33% width vs. 50%)</li>
+          <li>Mobile view collapses to vertical stack anyway, defeating the side-by-side pitch</li>
+          <li>Notes-for-next-time block in FRO entry has to summarize two airframes — denser to read</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPTION C -->
+  <div class="frame">
+    <div class="frame-head">
+      <h2>Option C · Stacked diptychs</h2>
+      <span class="tag">Two examples, vertical</span>
+      <a class="open" href="option-c.html" target="_blank">open full →</a>
+    </div>
+    <iframe src="option-c.html" height="1500" loading="lazy"></iframe>
+    <div class="pros-cons">
+      <div class="col pros">
+        <h3>What it does well</h3>
+        <ul>
+          <li>Each panel keeps full readable width — no cramped layout</li>
+          <li>Strongest pedagogical read: same problem, two pubs, twice over</li>
+          <li>Rhymes nicely with the "longitudinal use" framing in §1 (year 1, year 2, year 5)</li>
+        </ul>
+      </div>
+      <div class="col cons">
+        <h3>What it costs</h3>
+        <ul>
+          <li>Section roughly doubles in height — biggest visual footprint of the four</li>
+          <li>Repetitive content: same procedure, same point, two airframes — risks reader fatigue</li>
+          <li>The diptych lands harder when it's <em>one</em> dense moment, not two</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- PICK -->
+  <div class="pick">
+    <b>My recommendation</b>
+    <p><strong>Option A — civilian swap.</strong> Reasoning: the audience strip already does the breadth-of-audience work (10 pills covering both worlds). The diptych's job is to make a <em>single</em> "before / after" point land hard. Doing that twice (Option C) or three-up (Option B) dilutes the punch.</p>
+    <p style="margin-top:.8rem">A swap to Cessna 172 reads civilian without losing authenticity (Cessna is as iconic in GA as the UH-60M is in Army aviation). The pills strip still claims military, the swap doesn't contradict it — just rebalances the source-of-truth example civilian for one section.</p>
+    <p style="margin-top:.8rem">If you'd rather keep the military example and trust the pills strip to do all the heavy lifting, <em>current state</em> is also defensible — it's not broken.</p>
+    <p style="margin-top:1rem"><span class="live-link">Live site: <a href="../../../index.html#notebook">../../../index.html#notebook</a> · Reply with A, B, C, or "stay current."</span></p>
+  </div>
+</div>
+</body>
+</html>
